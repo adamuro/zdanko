@@ -30,9 +30,9 @@ class Scraper():
 
     term = soup.find('small', { 'class': 'text-muted' }).text
     name = course['name'].lower() + ' ' + term
-    type = info[3].text.strip().replace('\n', '')
+    type = info[3].text.strip().replace('\n', '').lower()
     ects = int(info[4].text.strip().replace('\n', ''))
-    effects = [effect.text for effect in soup.find_all('span', { 'class': 'badge badge-info mr-2' })]
+    effects = [effect.text.lower() for effect in soup.find_all('span', { 'class': 'badge badge-info mr-2' })]
 
     self.courses.append({
       'name': name,
