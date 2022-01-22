@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup as bs
 BASE_URL = 'https://zapisy.ii.uni.wroc.pl/courses'
 
 class Scraper():
-  def __init__(self, base_url):
+  def __init__(self, base_url=BASE_URL):
     self.waiting_phrases = ['Momencik...', 'Chwilunia...', 'Już kończę...', 'Już prawie...', 'Jeszcze tylko...', 'Już blisko...', 'Ostatnia prosta...', 'Poczekaj...', 'Zaraz, zaraz...', 'Sekundka...', 'Yyy...', 'Teraz naprawdę...']
     self.base_url = base_url
     self.courses = []
@@ -54,4 +54,3 @@ class Scraper():
         thread.start()
       for thread in threads:
         thread.join()
-
