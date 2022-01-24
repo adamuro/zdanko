@@ -1,15 +1,15 @@
-from os import getenv
+import os
+import dotenv
 from typing import List
-from dotenv import load_dotenv
 from pymongo import MongoClient
 
 from scraper import Scraper
 
 class CoursesRepository:
   def __init__(self):
-    load_dotenv()
-    db_password = getenv('DB_PASSWORD')
-    db_uri = getenv('DB_URI').replace('<password>', db_password)
+    dotenv.load_dotenv()
+    db_password = os.getenv('DB_PASSWORD')
+    db_uri = os.getenv('DB_URI').replace('<password>', db_password)
     self.courses = MongoClient(db_uri)['zdanko']['courses']
 
   def find_all(self):
@@ -55,4 +55,14 @@ class CoursesList:
 
     self.courses.remove(course)
     return True
+  
+  def empty(self):
+    return len(self.courses) == 0
+  
+  def completions(self, text, line):
+    # Cmd autocompletes only the last word so we need to skip all the words before (offset)
+    arg = line.partition(' ')[2].lower()
+    offset = len(arg) - len(text)
+    return [course['name'][offset:] for course in self.courses if course['name'].startswith(arg)]
+
 

@@ -1,5 +1,4 @@
 from functools import reduce
-from scraper import Scraper
 
 ENGINEER_REQUIREMENTS = {
   'types': [
