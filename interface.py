@@ -1,3 +1,4 @@
+import sys
 from cmd import Cmd
 from courses import CoursesList, CoursesRepository
 from requirements import Requirements
@@ -63,7 +64,7 @@ class Interface(Cmd):
   def do_q(self, arg):
     'Zamknij program'
     self.stdout.write('Do zobaczenia!\n')
-    exit()
+    sys.exit()
 
   def complete_add(self, text, line, begidx, endidx):
     return self.courses.completions(text, line)
@@ -80,5 +81,3 @@ class Interface(Cmd):
 
   def emptyline(self):
     return
-
-Interface().cmdloop()

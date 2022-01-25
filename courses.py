@@ -1,16 +1,10 @@
-import os
-import dotenv
-from typing import List
+import config
 from pymongo import MongoClient
-
 from scraper import Scraper
 
 class CoursesRepository:
   def __init__(self):
-    dotenv.load_dotenv()
-    db_password = os.getenv('DB_PASSWORD')
-    db_uri = os.getenv('DB_URI').replace('<password>', db_password)
-    self.courses = MongoClient(db_uri)['zdanko']['courses']
+    self.courses = MongoClient(config.DB_URI)['zdanko']['courses']
 
   def find_all(self):
     return list(self.courses.find({}, { '_id': False }))
@@ -33,7 +27,7 @@ class CoursesRepository:
       return False
 
 class CoursesList:
-  def __init__(self, courses: List=[]):
+  def __init__(self, courses: list=[]):
     self.courses = courses
   
   def all(self):

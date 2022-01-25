@@ -1,13 +1,12 @@
+import config
 import json
 import random
 from threading import Thread
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as bs
 
-BASE_URL = 'https://zapisy.ii.uni.wroc.pl/courses'
-
 class Scraper():
-  def __init__(self, base_url=BASE_URL):
+  def __init__(self, base_url=config.COURSES_URL):
     self.waiting_phrases = ['Momencik...', 'Chwilunia...', 'Już kończę...', 'Już prawie...', 'Jeszcze tylko...', 'Już blisko...', 'Ostatnia prosta...', 'Poczekaj...', 'Zaraz, zaraz...', 'Sekundka...', 'Yyy...', 'Teraz naprawdę...']
     self.base_url = base_url
     self.courses = []
