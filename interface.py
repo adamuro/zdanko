@@ -37,6 +37,10 @@ class Interface(Cmd):
   def do_q(self, arg):
     'Zamknij program'
     self.controller.quit()
+  
+  def do_save(self, arg):
+    'Zapisz lokalnie listę ukończonych kursów'
+    self.controller.save()
 
   def complete_add(self, text, line, begidx, endidx):
     return self.controller.complete_add(text, line)

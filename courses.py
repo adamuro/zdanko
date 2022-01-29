@@ -58,5 +58,4 @@ class CoursesList:
     arg = line.partition(' ')[2].lower()
     offset = len(arg) - len(text)
     return [course['name'][offset:] for course in self.courses if course['name'].startswith(arg)]
-
-
+  

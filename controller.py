@@ -1,12 +1,14 @@
 import sys
 from courses import CoursesList, CoursesRepository
+from dotfile import Dotfile
 from requirements import Requirements
 
 class Controller:
-  def __init__(self, requirements: Requirements=Requirements(), finished_courses: CoursesList=CoursesList(), repository: CoursesRepository=CoursesRepository()):
+  def __init__(self, requirements: Requirements=Requirements(), dotfile: Dotfile=Dotfile(), repository: CoursesRepository=CoursesRepository()):
     self.requirements = requirements
-    self.finished_courses = finished_courses
     self.repository = repository
+    self.dotfile = dotfile
+    self.finished_courses = CoursesList(dotfile.load())
     self.courses = CoursesList(repository.find_all()) # Because reading courses directly from the repository every time is too slow
 
   def add(self, arg):
@@ -66,8 +68,13 @@ class Controller:
   def update(self):
     if self.repository.update():
       self.courses = self.repository.find_all()
+  
+  def save(self):
+    self.dotfile.save(self.finished_courses.all())
+    sys.stdout.write('Kursy zostały zapisane!\n')
 
   def quit(self):
+    self.save()
     sys.stdout.write('Do zobaczenia!\n')
     sys.exit()
 
