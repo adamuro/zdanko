@@ -1,3 +1,4 @@
+import sys
 import config
 import json
 import random
@@ -10,9 +11,9 @@ class Scraper():
     self.waiting_phrases = ['Momencik...', 'Chwilunia...', 'Już kończę...', 'Już prawie...', 'Jeszcze tylko...', 'Już blisko...', 'Ostatnia prosta...', 'Poczekaj...', 'Zaraz, zaraz...', 'Sekundka...', 'Yyy...', 'Teraz naprawdę...']
     self.base_url = base_url
     self.courses = []
-    print('Pobieram kursy...')
+    sys.stdout.write('Pobieram kursy...\n')
     self.__scrap_courses()
-    print('Mamy to!\n')
+    sys.stdout.write('Mamy to!\n\n')
 
   def __soup(self, url):
     response = urlopen(url)
@@ -42,7 +43,7 @@ class Scraper():
 
   def __scrap_courses(self):
     for url in self.__courses_urls():
-      print(random.choice(self.waiting_phrases))
+      sys.stdout.write(random.choice(self.waiting_phrases) + '\n')
 
       threads = []
       courses_string = self.__soup(url).find('script', { 'id': 'courses-data' }).text

@@ -1,3 +1,4 @@
+import sys
 import config
 from pymongo import MongoClient
 from scraper import Scraper
@@ -20,15 +21,15 @@ class CoursesRepository:
     if sorted(updated_courses, key=key) != sorted(current_courses, key=key):
       self.courses.drop()
       self.courses.insert_many(updated_courses)
-      print('Kursy zostały uaktualnione!')
+      sys.stdout.write('Kursy zostały uaktualnione!\n')
       return True
     else:
-      print('Kursy nie wymagają aktualizacji.')
+      sys.stdout.write('Kursy nie wymagają aktualizacji.\n')
       return False
 
 class CoursesList:
-  def __init__(self, courses: list=[]):
-    self.courses = courses
+  def __init__(self, courses=None):
+    self.courses = courses if courses else []
   
   def all(self):
     return self.courses

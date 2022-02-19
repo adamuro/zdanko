@@ -1,19 +1,15 @@
 import getpass
 import json
-from pathlib import Path
 import platform
 import sys
+from pathlib import Path
 
 class Dotfile:
-  def __init__(self, path=None):
-    if path:
-      self.path = path
-    elif self.__linux():
+  def __init__(self):
+    if self.__linux():
       self.path = f'/home/{getpass.getuser()}/.zdanko'
-    # elif self.__windows():
-    #   self.path = f'C:/{getpass.getuser()}/AppData/Roaming/Zdanko/courses.json'
     else:
-      sys.stderr('Program nie jest obsługiwany przez ten system operacyjny :(\n')
+      sys.stderr.write('Program nie jest obsługiwany przez ten system operacyjny :(\n')
       sys.exit()
     
     Path(self.path).touch(exist_ok=True)
@@ -28,6 +24,3 @@ class Dotfile:
   def save(self, courses):
     file = open(self.path, 'w')
     file.write(json.dumps(courses))
-
-  # def __windows(self):
-  #   return platform.system() == 'Windows'

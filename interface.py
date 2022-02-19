@@ -6,9 +6,9 @@ class Interface(Cmd):
   doc_header = 'Dostępne komendy (wpisz help <komenda>):'
   prompt = '> '
 
-  def __init__(self, controller: Controller=Controller()):
+  def __init__(self, controller: Controller=None):
     super().__init__()
-    self.controller = controller
+    self.controller = controller if controller else Controller()
 
   def do_add(self, arg):
     'Dodaj kurs do listy ukończonych kursów: add <nazwa kursu> <semestr: lato|zima> <rok: 2016/17|2017/18|...>'

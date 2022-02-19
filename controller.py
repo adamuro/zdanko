@@ -4,12 +4,12 @@ from dotfile import Dotfile
 from requirements import Requirements
 
 class Controller:
-  def __init__(self, requirements: Requirements=Requirements(), dotfile: Dotfile=Dotfile(), repository: CoursesRepository=CoursesRepository()):
-    self.requirements = requirements
-    self.repository = repository
-    self.dotfile = dotfile
-    self.finished_courses = CoursesList(dotfile.load())
-    self.courses = CoursesList(repository.find_all()) # Because reading courses directly from the repository every time is too slow
+  def __init__(self, requirements: Requirements=None, dotfile: Dotfile=None, repository: CoursesRepository=None):
+    self.requirements = requirements if requirements else Requirements()
+    self.dotfile = dotfile if dotfile else Dotfile()
+    self.repository = repository if repository else CoursesRepository()
+    self.finished_courses = CoursesList(self.dotfile.load())
+    self.courses = CoursesList(self.repository.find_all()) # Because reading courses directly from the repository every time is too slow
 
   def add(self, arg):
     course = self.courses.name(arg)
@@ -33,9 +33,7 @@ class Controller:
     for name in self.finished_courses.names():
       sys.stdout.write(f'{name}\n')
 
-  def calculate_engineer(self):
-    types_lacks, effects_lacks = self.requirements.check_engineer(self.finished_courses.all())
-
+  def print_lacks(self, types_lacks, effects_lacks):
     if types_lacks:
       sys.stdout.write('\n*** Liczba ECTS potrzebna do uzyskania z przedmiotów o typie z danej grupy: ***\n')
     for lack in types_lacks:
@@ -48,26 +46,19 @@ class Controller:
       sys.stdout.write('\n*** Efekty kształcenia potrzebne do zaliczenia: ***\n')
     for effect in effects_lacks:
       sys.stdout.write(f'- {effect}\n')
+
+  def calculate_engineer(self):
+    types_lacks, effects_lacks = self.requirements.check_engineer(self.finished_courses.all())
+    self.print_lacks(types_lacks, effects_lacks)
 
   def calculate_bachelor(self):
     types_lacks, effects_lacks = self.requirements.check_bachelor(self.finished_courses.all())
-
-    if types_lacks:
-      sys.stdout.write('\n*** Liczba ECTS potrzebna do uzyskania z przedmiotów o typie z danej grupy: ***\n')
-    for lack in types_lacks:
-      types, ects = lack['types'], lack['ects']
-      sys.stdout.write('- ')
-      for i, type in enumerate(types, start=1):
-        sys.stdout.write(f'{type}: {ects}\n' if i == len(types) else f'{type}, ')
-
-    if effects_lacks:
-      sys.stdout.write('\n*** Efekty kształcenia potrzebne do zaliczenia: ***\n')
-    for effect in effects_lacks:
-      sys.stdout.write(f'- {effect}\n')
+    self.print_lacks(types_lacks, effects_lacks)
   
   def update(self):
     if self.repository.update():
-      self.courses = self.repository.find_all()
+      courses = self.repository.find_all()
+      self.courses = CoursesList(courses)
   
   def save(self):
     self.dotfile.save(self.finished_courses.all())
